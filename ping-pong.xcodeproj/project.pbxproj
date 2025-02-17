@@ -245,6 +245,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/vendor/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ping-pong/vendor/sdl2/2.32.0/lib",
+					"$(PROJECT_DIR)/ping-pong/vendor/sdl2_image/2.8.4/lib",
+					"$(PROJECT_DIR)/ping-pong/vendor",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -253,6 +260,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/vendor/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ping-pong/vendor/sdl2/2.32.0/lib",
+					"$(PROJECT_DIR)/ping-pong/vendor/sdl2_image/2.8.4/lib",
+					"$(PROJECT_DIR)/ping-pong/vendor",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
