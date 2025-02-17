@@ -9,18 +9,28 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		462F6DEF2D626212005E75DD /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4604411F2D62DB0E00808254 /* ping-pong */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ping-pong"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		4622121D2D638928002A3E93 /* Exceptions for "ping-pong" folder in "Copy Files" phase from "ping-pong" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 462F6DEF2D626212005E75DD /* CopyFiles */;
+			membershipExceptions = (
+				res/gfx/img.png,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		460442D62D62E00500808254 /* vendor */ = {
@@ -30,6 +40,9 @@
 		};
 		462F6DF32D626212005E75DD /* ping-pong */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4622121D2D638928002A3E93 /* Exceptions for "ping-pong" folder in "Copy Files" phase from "ping-pong" target */,
+			);
 			path = "ping-pong";
 			sourceTree = "<group>";
 		};

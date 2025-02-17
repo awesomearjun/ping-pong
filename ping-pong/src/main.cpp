@@ -9,11 +9,13 @@
 #include <SDL2/SDL.h>
 
 #include "RenderWindow.hpp"
+#include "Math.hpp"
+#include "Entity.hpp"
 
 #define W_WIDTH  1280
 #define W_Height 720
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "Problem initializing video: " << SDL_GetError() << std::endl;
     }
@@ -23,6 +25,9 @@ int main(int argc, const char * argv[]) {
     }
 
     RenderWindow window("Ping Pong", W_WIDTH, W_Height);
+
+    SDL_Texture *imgTexture = window.loadTexture("img.png");
+    Entity billy(Vector2f(0, 0), imgTexture);
 
 
     bool gameRunning = true;
@@ -34,6 +39,12 @@ int main(int argc, const char * argv[]) {
                 gameRunning = false;
             }
         }
+
+        window.clear();
+
+        window.render(billy);
+
+        window.display();
     }
 
     SDL_Quit();
