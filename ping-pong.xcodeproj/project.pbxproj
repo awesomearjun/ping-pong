@@ -19,10 +19,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		462F6DF12D626212005E75DD /* ping-pong */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ping-pong"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4604411F2D62DB0E00808254 /* ping-pong */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ping-pong"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		460442D62D62E00500808254 /* vendor */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = vendor;
+			sourceTree = "<group>";
+		};
 		462F6DF32D626212005E75DD /* ping-pong */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "ping-pong";
@@ -45,16 +50,9 @@
 			isa = PBXGroup;
 			children = (
 				462F6DF32D626212005E75DD /* ping-pong */,
-				462F6DF22D626212005E75DD /* Products */,
+				4604411F2D62DB0E00808254 /* ping-pong */,
+				460442D62D62E00500808254 /* vendor */,
 			);
-			sourceTree = "<group>";
-		};
-		462F6DF22D626212005E75DD /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				462F6DF12D626212005E75DD /* ping-pong */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -73,13 +71,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				460442D62D62E00500808254 /* vendor */,
 				462F6DF32D626212005E75DD /* ping-pong */,
 			);
 			name = "ping-pong";
 			packageProductDependencies = (
 			);
 			productName = "ping-pong";
-			productReference = 462F6DF12D626212005E75DD /* ping-pong */;
+			productReference = 4604411F2D62DB0E00808254 /* ping-pong */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -106,7 +105,7 @@
 			mainGroup = 462F6DE82D626212005E75DD;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 462F6DF22D626212005E75DD /* Products */;
+			productRefGroup = 462F6DE82D626212005E75DD;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -245,12 +244,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/vendor/**";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/vendor/**",
+					"$(PROJECT_DIR)/ping-pong/include/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ping-pong/vendor/sdl2/2.32.0/lib",
 					"$(PROJECT_DIR)/ping-pong/vendor/sdl2_image/2.8.4/lib",
 					"$(PROJECT_DIR)/ping-pong/vendor",
+					"$(PROJECT_DIR)/vendor/sdl2/2.32.0/lib",
+					"$(PROJECT_DIR)/vendor/sdl2_image/2.8.4/lib",
+					"$(PROJECT_DIR)/vendor",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -260,12 +265,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/vendor/**";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/vendor/**",
+					"$(PROJECT_DIR)/ping-pong/include/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ping-pong/vendor/sdl2/2.32.0/lib",
 					"$(PROJECT_DIR)/ping-pong/vendor/sdl2_image/2.8.4/lib",
 					"$(PROJECT_DIR)/ping-pong/vendor",
+					"$(PROJECT_DIR)/vendor/sdl2/2.32.0/lib",
+					"$(PROJECT_DIR)/vendor/sdl2_image/2.8.4/lib",
+					"$(PROJECT_DIR)/vendor",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
