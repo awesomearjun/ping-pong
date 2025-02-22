@@ -13,21 +13,18 @@
 
 class Entity {
 private:
-    Vector2f position;
     SDL_Rect currentFrame;
     SDL_Texture *texture;
-    
 public:
-    Entity(Vector2f p_position, SDL_Texture *p_texture);
+    Vector2f position;
+    Vector2f spriteSize;
+
+    Entity(Vector2f p_position, SDL_Texture *p_texture, int p_width, int p_height);
     SDL_Texture *getTexture() {
         return texture;
     }
 
     SDL_Rect getCurrentFrame() {
         return currentFrame;
-    }
-
-    Vector2f getPosition() {
-        return position;
     }
 };

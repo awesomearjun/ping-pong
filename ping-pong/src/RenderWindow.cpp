@@ -18,7 +18,7 @@ RenderWindow::RenderWindow(const char *p_title, int p_width, int p_height)
         std::cout << "Error with window making: " << SDL_GetError() << std::endl;
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 }
 
 RenderWindow::~RenderWindow() {
@@ -33,8 +33,8 @@ void RenderWindow::render(Entity& p_entity) {
     src.h = p_entity.getCurrentFrame().h;
 
     SDL_Rect dst;
-    dst.x = p_entity.getPosition().x;
-    dst.y = p_entity.getPosition().y;
+    dst.x = p_entity.position.x;
+    dst.y = p_entity.position.y;
     dst.w = p_entity.getCurrentFrame().w * 4;
     dst.h = p_entity.getCurrentFrame().h * 4;
 
