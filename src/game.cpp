@@ -9,6 +9,8 @@
 #include "SDL_render.h"
 #include "SDL_video.h"
 
+#include "entity.hpp"
+
 SDL_Renderer *Game::gameRenderer = nullptr;
 
 void Game::init(const char *windowTitle, int windowX, int windowY,
@@ -30,7 +32,12 @@ void Game::init(const char *windowTitle, int windowX, int windowY,
         window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (Game::gameRenderer == nullptr)
-        std::cerr << "Error making gameRenderer: " << SDL_GetError() << std::endl;
+    {
+        std::cerr << "Error making gameRenderer: " << SDL_GetError()
+                  << std::endl;
+    }
+
+    player.init(7, 7, 30, 150);
 }
 
 void Game::update()
@@ -49,14 +56,19 @@ void Game::update()
                 break;
             }
         }
-    }
 
-	SDL_RenderClear(Game::gameRenderer);
+        SDL_SetRenderDrawColor(Game::gameRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(Game::gameRenderer);
+
+        player.update();
+
+        SDL_RenderPresent(Game::gameRenderer);
+    }
 }
 
 void Game::destroy()
 {
-	SDL_DestroyRenderer(gameRenderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
+    SDL_DestroyRenderer(gameRenderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }

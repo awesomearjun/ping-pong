@@ -20,6 +20,8 @@ FetchContent_MakeAvailable(sdl2)
 set(SRCS
     src/main.cpp
     src/game.cpp
+	src/vector.cpp
+	src/entity.cpp
 )
 
 add_executable(${PROJECT_NAME})

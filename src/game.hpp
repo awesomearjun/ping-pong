@@ -1,4 +1,8 @@
+#pragma once
+
 #include <SDL.h>
+
+#include "entity.hpp"
 
 class Game
 {
@@ -12,4 +16,5 @@ public:
 
 private:
     SDL_Window *window;
+	Entity player;
 };
