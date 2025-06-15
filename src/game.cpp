@@ -8,9 +8,11 @@
 #include "SDL_events.h"
 #include "SDL_render.h"
 #include "SDL_scancode.h"
+#include "SDL_timer.h"
 #include "SDL_video.h"
 
 #include "entity.hpp"
+#include "vector.hpp"
 
 SDL_Renderer *Game::gameRenderer = nullptr;
 
@@ -38,9 +40,16 @@ void Game::init(const char *windowTitle, int windowX, int windowY,
                   << std::endl;
     }
 
-    player.init(7, 7, 30, 150);
     this->windowWidth = windowWidth;
     this->windowHeight = windowHeight;
+
+    player.init(Vec2D(7, 7), Vec2D(30, 150));
+    ball.init(Vec2D((static_cast<float>(this->windowWidth) / 2) - 15,
+                    (static_cast<float>(this->windowHeight) / 2) - 15),
+              Vec2D(30, 30));
+
+    ball.velocity = Vec2D(-5, -5);
+    dt = 0;
 }
 
 void Game::update()
@@ -66,8 +75,9 @@ void Game::update()
         SDL_RenderClear(Game::gameRenderer);
 
         player.update();
+        ball.update();
 
-        keyboardManager();
+        eventManager();
 
         SDL_RenderPresent(Game::gameRenderer);
 
@@ -83,7 +93,7 @@ void Game::destroy()
     SDL_Quit();
 }
 
-void Game::keyboardManager()
+void Game::eventManager()
 {
     const uint8_t *currentKeyState = SDL_GetKeyboardState(NULL);
 
@@ -99,4 +109,24 @@ void Game::keyboardManager()
         player.velocity = Vec2D(0, playerMovementSpeed * dt);
     else
         player.velocity = Vec2D(0, 0);
+
+    if (ball.position.y < 0 || ball.position.y + ball.size.y > windowHeight)
+        ball.velocity.y *= -1;
+
+    if (ball.position.x <= player.position.x + player.size.x &&
+        (ball.position.y > player.position.y &&
+         ball.position.y < player.position.y + player.size.y))
+    {
+        // To avoid ball getting stuck
+        ball.position.x = player.position.x + player.size.x + 1;
+
+        ball.velocity.x *= -1;
+    }
+
+    // TODO: REMOVE WHEN ENEMY IS ADDED
+    if (ball.position.x > windowWidth)
+        ball.velocity.x *= -1;
+
+    ball.position.x += ball.velocity.x * dt;
+    ball.position.y += ball.velocity.y * dt;
 }

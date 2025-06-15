@@ -6,7 +6,7 @@
 class Entity
 {
 public:
-    void init(int x, int y, int w, int h);
+	void init(Vec2D spritePosition, Vec2D spriteSize);
     void update();
 
     Vec2D velocity;

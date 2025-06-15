@@ -15,10 +15,12 @@ public:
     static SDL_Renderer *gameRenderer;
 
 private:
-	void keyboardManager();
+	void eventManager();
 
     SDL_Window *window;
-	Entity player;
 	double dt;
 	int windowWidth, windowHeight;
+
+	Entity player;
+	Entity ball;
 };

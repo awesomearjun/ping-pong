@@ -2,13 +2,12 @@
 
 #include "SDL_render.h"
 #include "game.hpp"
+#include "vector.hpp"
 
-void Entity::init(int x, int y, int w, int h)
+void Entity::init(Vec2D spritePosition, Vec2D spriteSize)
 {
-    position.x = x;
-    position.y = y;
-	size.x = w;
-	size.y = h;
+    position = spritePosition;
+	size = spriteSize;
 }
 
 void Entity::update()
@@ -20,5 +19,5 @@ void Entity::update()
 	rect.h = size.y;
 
     SDL_SetRenderDrawColor(Game::gameRenderer, 255, 255, 255, 255);
-    SDL_RenderDrawRect(Game::gameRenderer, &rect);
+    SDL_RenderFillRect(Game::gameRenderer, &rect);
 }
