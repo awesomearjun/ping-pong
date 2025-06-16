@@ -16,8 +16,8 @@
 
 SDL_Renderer *Game::gameRenderer = nullptr;
 
-void Game::init(const char *windowTitle, int windowX, int windowY,
-                int windowWidth, int windowHeight, uint32_t windowFlags)
+void Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
+                int p_windowWidth, int p_windowHeight, uint32_t p_windowFlags)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -25,8 +25,8 @@ void Game::init(const char *windowTitle, int windowX, int windowY,
                   << std::endl;
     }
 
-    window = SDL_CreateWindow(windowTitle, windowX, windowY, windowWidth,
-                              windowHeight, windowFlags);
+    window = SDL_CreateWindow(p_windowTitle, p_windowX, p_windowY,
+                              p_windowWidth, p_windowHeight, p_windowFlags);
 
     if (window == nullptr)
         std::cerr << "Error making window: " << SDL_GetError() << std::endl;
@@ -40,14 +40,20 @@ void Game::init(const char *windowTitle, int windowX, int windowY,
                   << std::endl;
     }
 
-    this->windowWidth = windowWidth;
-    this->windowHeight = windowHeight;
+    windowWidth = static_cast<float>(p_windowWidth);
+    windowHeight = static_cast<float>(p_windowHeight);
 
-    player.init(Vec2D(7, 7), Vec2D(30, 150));
+    Vec2D paddleSize = Vec2D(30, 150);
+    constexpr float paddleOffset = 10;
+
+    player.init(Vec2D(paddleOffset, windowHeight / 2 - paddleSize.y / 2),
+                paddleSize);
+    enemy.init(Vec2D(windowWidth - paddleSize.x - paddleOffset,
+                     windowHeight / 2 - paddleSize.y / 2),
+               paddleSize);
     ball.init(Vec2D((static_cast<float>(this->windowWidth) / 2) - 15,
                     (static_cast<float>(this->windowHeight) / 2) - 15),
               Vec2D(30, 30));
-
     ball.velocity = Vec2D(-5, -5);
     dt = 0;
 }
@@ -56,6 +62,7 @@ void Game::update()
 {
     SDL_Event event;
     bool gameRunning = true;
+	frameNumber = 0;
 
     while (gameRunning)
     {
@@ -75,6 +82,7 @@ void Game::update()
         SDL_RenderClear(Game::gameRenderer);
 
         player.update();
+        enemy.update();
         ball.update();
 
         eventManager();
@@ -83,6 +91,7 @@ void Game::update()
 
         const uint32_t end = SDL_GetTicks();
         dt = (double)(end - start) / 1000;
+		frameNumber++;
     }
 }
 
@@ -123,10 +132,16 @@ void Game::eventManager()
         ball.velocity.x *= -1;
     }
 
-    // TODO: REMOVE WHEN ENEMY IS ADDED
-    if (ball.position.x > windowWidth)
+    if (ball.position.x + ball.size.x > enemy.position.x &&
+        (ball.position.y > enemy.position.y &&
+         ball.position.y < enemy.position.y + enemy.size.y))
+    {
         ball.velocity.x *= -1;
+    }
 
     ball.position.x += ball.velocity.x * dt;
     ball.position.y += ball.velocity.y * dt;
+
+    if (ball.position.y < windowHeight - enemy.size.y && frameNumber % 8 != 0)
+        enemy.position.y = ball.position.y;
 }

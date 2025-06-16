@@ -7,8 +7,8 @@
 class Game
 {
 public:
-    void init(const char *windowTitle, int windowX, int windowY,
-              int windowWidth, int windowHeight, uint32_t windowFlags);
+    void init(const char *p_windowTitle, int p_windowX, int p_windowY,
+              int p_windowWidth, int p_windowHeight, uint32_t p_windowFlags);
     void update();
     void destroy();
 
@@ -19,8 +19,11 @@ private:
 
     SDL_Window *window;
 	double dt;
-	int windowWidth, windowHeight;
+	float windowWidth, windowHeight;
 
 	Entity player;
+	Entity enemy;
 	Entity ball;
+
+	int frameNumber;
 };
