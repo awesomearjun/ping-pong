@@ -62,7 +62,7 @@ void Game::update()
 {
     SDL_Event event;
     bool gameRunning = true;
-	frameNumber = 0;
+    frameNumber = 0;
 
     while (gameRunning)
     {
@@ -91,7 +91,7 @@ void Game::update()
 
         const uint32_t end = SDL_GetTicks();
         dt = (double)(end - start) / 1000;
-		frameNumber++;
+        frameNumber++;
     }
 }
 
@@ -133,7 +133,7 @@ void Game::eventManager()
     }
 
     if (ball.position.x + ball.size.x > enemy.position.x &&
-        (ball.position.y > enemy.position.y &&
+        (ball.position.y + ball.size.y > enemy.position.y &&
          ball.position.y < enemy.position.y + enemy.size.y))
     {
         ball.velocity.x *= -1;
