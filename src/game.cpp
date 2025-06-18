@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include <cstdint>
+#include <cstdlib>
 #include <iostream>
 
 #include "SDL.h"
@@ -130,6 +131,14 @@ void Game::eventManager()
         ball.position.x = player.position.x + player.size.x + 1;
 
         ball.velocity.x *= -1;
+
+        // Make ball go in y direction that player is moving
+        // formula gets sign of the velocity (if not 0)
+        if (player.velocity.y != 0)
+        {
+            ball.velocity.y = abs(ball.velocity.y) *
+                              (player.velocity.y / abs(player.velocity.y));
+        }
     }
 
     if (ball.position.x + ball.size.x > enemy.position.x &&
