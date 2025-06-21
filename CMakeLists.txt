@@ -15,7 +15,14 @@ FetchContent_Declare(
 	GIT_TAG release-2.32.8
 )
 
+FetchContent_Declare(
+	sdl2_ttf
+	GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+	GIT_TAG release-2.24.0
+)
+
 FetchContent_MakeAvailable(sdl2)
+FetchContent_MakeAvailable(sdl2_ttf)
 
 # files
 set(SRCS
@@ -29,5 +36,9 @@ add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE ${SRCS})
 
 include_directories(${PROJECT_NAME} PRIVATE ${SDL2_SOURCE_DIR}/include)
+include_directories(${PROJECT_NAME} PRIVATE ${SDL2_ttf_SOURCE_DIR}/include)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf)
+
 

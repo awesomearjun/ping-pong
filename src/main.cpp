@@ -4,8 +4,11 @@
 int main()
 {
     Game game;
-    game.init("Ping Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280,
-              720, SDL_WINDOW_RESIZABLE);
+    if (game.init("Ping Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                  1280, 720, 0) != 0)
+    {
+        return 1;
+    }
     game.update();
     game.destroy();
 }

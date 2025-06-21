@@ -7,7 +7,7 @@
 class Game
 {
 public:
-    void init(const char *p_windowTitle, int p_windowX, int p_windowY,
+    int init(const char *p_windowTitle, int p_windowX, int p_windowY,
               int p_windowWidth, int p_windowHeight, uint32_t p_windowFlags);
     void update();
     void destroy();

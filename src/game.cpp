@@ -10,6 +10,7 @@
 #include "SDL_render.h"
 #include "SDL_scancode.h"
 #include "SDL_timer.h"
+#include "SDL_ttf.h"
 #include "SDL_video.h"
 
 #include "entity.hpp"
@@ -17,12 +18,18 @@
 
 SDL_Renderer *Game::gameRenderer = nullptr;
 
-void Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
+int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
                 int p_windowWidth, int p_windowHeight, uint32_t p_windowFlags)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cerr << "Problem initializing SDL: " << SDL_GetError()
+                  << std::endl;
+    }
+
+    if (TTF_Init() == -1)
+    {
+        std::cerr << "Problem initializing SDL_ttf: " << SDL_GetError()
                   << std::endl;
     }
 
@@ -112,6 +119,7 @@ void Game::eventManager()
     const bool down = currentKeyState[SDL_SCANCODE_DOWN] |
                       currentKeyState[SDL_SCANCODE_S];
     constexpr float playerMovementSpeed = 500;
+    constexpr float botSpeedMultiplier = 0.9f;
 
     if (up && player.position.y > 0)
         player.velocity = Vec2D(0, -playerMovementSpeed * dt);
@@ -145,12 +153,23 @@ void Game::eventManager()
         (ball.position.y + ball.size.y > enemy.position.y &&
          ball.position.y < enemy.position.y + enemy.size.y))
     {
+        // To avoid ball getting stuck
+        ball.position.x = enemy.position.x - 1 - ball.size.y;
         ball.velocity.x *= -1;
     }
 
     ball.position.x += ball.velocity.x * dt;
     ball.position.y += ball.velocity.y * dt;
 
-    if (ball.position.y < windowHeight - enemy.size.y && frameNumber % 8 != 0)
-        enemy.position.y = ball.position.y;
+    if (ball.position.y - (enemy.size.y / 2) < windowHeight - enemy.size.y &&
+        ball.position.y > 0 && frameNumber % 8 != 0)
+    {
+        float diff = ball.position.y - (enemy.position.y + (enemy.size.y / 2));
+        enemy.velocity.y =
+            playerMovementSpeed * (diff / abs(diff)) * botSpeedMultiplier * dt;
+    }
+    else
+    {
+        enemy.velocity.y = 0;
+    }
 }
