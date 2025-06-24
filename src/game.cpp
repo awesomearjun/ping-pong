@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include "SDL.h"
 #include "SDL_error.h"
@@ -14,12 +15,13 @@
 #include "SDL_video.h"
 
 #include "entity.hpp"
+#include "text.hpp"
 #include "vector.hpp"
 
 SDL_Renderer *Game::gameRenderer = nullptr;
 
 int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
-                int p_windowWidth, int p_windowHeight, uint32_t p_windowFlags)
+               int p_windowWidth, int p_windowHeight, uint32_t p_windowFlags)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -51,6 +53,9 @@ int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
     windowWidth = static_cast<float>(p_windowWidth);
     windowHeight = static_cast<float>(p_windowHeight);
 
+	playerScoreInt = 0;
+	enemyScoreInt = 0;
+
     Vec2D paddleSize = Vec2D(30, 150);
     constexpr float paddleOffset = 10;
 
@@ -64,6 +69,16 @@ int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
               Vec2D(30, 30));
     ball.velocity = Vec2D(-5, -5);
     dt = 0;
+
+    playerTextColor = {65, 105, 255, 255};
+    enemyTextColor = {255, 0, 0, 255};
+
+    playerScoreText.init("../res/fonts/Peepo.ttf", 40, "0", playerTextColor,
+                         windowWidth / 4, 20);
+    enemyScoreText.init("../res/fonts/Peepo.ttf", 40, "0", enemyTextColor,
+                        windowWidth / 4 * 3, 20);
+
+    return 0;
 }
 
 void Game::update()
@@ -89,9 +104,14 @@ void Game::update()
         SDL_SetRenderDrawColor(Game::gameRenderer, 0, 0, 0, 255);
         SDL_RenderClear(Game::gameRenderer);
 
-        player.update();
-        enemy.update();
-        ball.update();
+        player.update(playerTextColor.r, playerTextColor.g, playerTextColor.b,
+                      playerTextColor.a);
+        enemy.update(enemyTextColor.r, enemyTextColor.g, enemyTextColor.b,
+                     enemyTextColor.a);
+        ball.update(255, 255, 255, 255);
+
+        playerScoreText.update();
+        enemyScoreText.update();
 
         eventManager();
 
@@ -171,5 +191,30 @@ void Game::eventManager()
     else
     {
         enemy.velocity.y = 0;
+    }
+
+    // score
+    if (ball.position.x + ball.size.x > windowWidth)
+    {
+        playerScoreInt++;
+        playerScoreText.update(std::to_string(playerScoreInt));
+
+		SDL_Delay(300);
+
+        ball.position = Vec2D(player.position.x + player.size.x,
+                              player.position.y + player.size.y / 2);
+        ball.velocity.x *= -1;
+    }
+
+    if (ball.position.x < 0)
+    {
+        enemyScoreInt++;
+        enemyScoreText.update(std::to_string(enemyScoreInt));
+
+		SDL_Delay(300);
+
+        ball.position = Vec2D(enemy.position.x - enemy.size.x,
+                              enemy.position.y + enemy.size.y / 2);
+        ball.velocity.x *= -1;
     }
 }

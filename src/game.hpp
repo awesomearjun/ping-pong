@@ -2,7 +2,9 @@
 
 #include <SDL.h>
 
+#include "SDL_pixels.h"
 #include "entity.hpp"
+#include "text.hpp"
 
 class Game
 {
@@ -24,6 +26,15 @@ private:
 	Entity player;
 	Entity enemy;
 	Entity ball;
+
+	Text playerScoreText;
+	Text enemyScoreText;
+
+	int playerScoreInt;
+	int enemyScoreInt;
+
+	SDL_Color playerTextColor;
+	SDL_Color enemyTextColor;
 
 	int frameNumber;
 };

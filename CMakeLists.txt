@@ -30,6 +30,7 @@ set(SRCS
     src/game.cpp
 	src/vector.cpp
 	src/entity.cpp
+	src/text.cpp
 )
 
 add_executable(${PROJECT_NAME})
@@ -41,4 +42,6 @@ include_directories(${PROJECT_NAME} PRIVATE ${SDL2_ttf_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf)
 
+# files
+file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
 
