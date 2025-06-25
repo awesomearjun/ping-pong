@@ -8,6 +8,7 @@ class Entity
 public:
 	void init(Vec2D spritePosition, Vec2D spriteSize);
 	void update(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha);
+	void goToPos(const Vec2D &desiredPosition, const float &maxSpeed);
 
     Vec2D velocity;
     Vec2D position;

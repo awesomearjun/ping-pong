@@ -18,6 +18,7 @@ public:
 
 private:
 	void eventManager();
+	void enemyAI();
 
     SDL_Window *window;
 	double dt;

@@ -53,8 +53,8 @@ int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
     windowWidth = static_cast<float>(p_windowWidth);
     windowHeight = static_cast<float>(p_windowHeight);
 
-	playerScoreInt = 0;
-	enemyScoreInt = 0;
+    playerScoreInt = 0;
+    enemyScoreInt = 0;
 
     Vec2D paddleSize = Vec2D(30, 150);
     constexpr float paddleOffset = 10;
@@ -73,9 +73,9 @@ int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
     playerTextColor = {65, 105, 255, 255};
     enemyTextColor = {255, 0, 0, 255};
 
-    playerScoreText.init("../res/fonts/Peepo.ttf", 40, "0", playerTextColor,
+    playerScoreText.init("../res/fonts/Peepo.ttf", 40, "00", playerTextColor,
                          windowWidth / 4, 20);
-    enemyScoreText.init("../res/fonts/Peepo.ttf", 40, "0", enemyTextColor,
+    enemyScoreText.init("../res/fonts/Peepo.ttf", 40, "00", enemyTextColor,
                         windowWidth / 4 * 3, 20);
 
     return 0;
@@ -167,6 +167,8 @@ void Game::eventManager()
             ball.velocity.y = abs(ball.velocity.y) *
                               (player.velocity.y / abs(player.velocity.y));
         }
+
+        enemyAI();
     }
 
     if (ball.position.x + ball.size.x > enemy.position.x &&
@@ -181,25 +183,13 @@ void Game::eventManager()
     ball.position.x += ball.velocity.x * dt;
     ball.position.y += ball.velocity.y * dt;
 
-    if (ball.position.y - (enemy.size.y / 2) < windowHeight - enemy.size.y &&
-        ball.position.y > 0 && frameNumber % 8 != 0)
-    {
-        float diff = ball.position.y - (enemy.position.y + (enemy.size.y / 2));
-        enemy.velocity.y =
-            playerMovementSpeed * (diff / abs(diff)) * botSpeedMultiplier * dt;
-    }
-    else
-    {
-        enemy.velocity.y = 0;
-    }
-
     // score
     if (ball.position.x + ball.size.x > windowWidth)
     {
         playerScoreInt++;
         playerScoreText.update(std::to_string(playerScoreInt));
 
-		SDL_Delay(300);
+        SDL_Delay(300);
 
         ball.position = Vec2D(player.position.x + player.size.x,
                               player.position.y + player.size.y / 2);
@@ -209,12 +199,42 @@ void Game::eventManager()
     if (ball.position.x < 0)
     {
         enemyScoreInt++;
-        enemyScoreText.update(std::to_string(enemyScoreInt));
 
-		SDL_Delay(300);
+        std::string buffer;
+
+        if (std::to_string(enemyScoreInt).length() == 1)
+            buffer = "0" + std::to_string(enemyScoreInt);
+        else
+            buffer = std::to_string(enemyScoreInt);
+
+        enemyScoreText.update(buffer);
+
+        SDL_Delay(300);
 
         ball.position = Vec2D(enemy.position.x - enemy.size.x,
                               enemy.position.y + enemy.size.y / 2);
         ball.velocity.x *= -1;
+    }
+}
+
+void Game::enemyAI()
+{
+    // shoot a raycast
+    Vec2D point = ball.position;
+    Vec2D pointVelocity = ball.velocity;
+
+    while (true)
+    {
+        point += pointVelocity;
+
+        if (point.y < 0 || point.y > windowHeight)
+            pointVelocity.y *= -1;
+
+        if (point.x > enemy.position.x)
+        {
+            enemy.goToPos(Vec2D(enemy.position.x, point.y - enemy.size.y / 2),
+                          5);
+            return;
+        }
     }
 }
