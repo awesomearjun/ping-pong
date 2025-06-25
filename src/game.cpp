@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <string>
 
@@ -132,6 +133,7 @@ void Game::destroy()
 
 void Game::eventManager()
 {
+    bool callEnemyAi = false;
     const uint8_t *currentKeyState = SDL_GetKeyboardState(NULL);
 
     const bool up = currentKeyState[SDL_SCANCODE_UP] |
@@ -168,7 +170,7 @@ void Game::eventManager()
                               (player.velocity.y / abs(player.velocity.y));
         }
 
-        enemyAI();
+        callEnemyAi = true;
     }
 
     if (ball.position.x + ball.size.x > enemy.position.x &&
@@ -215,13 +217,29 @@ void Game::eventManager()
                               enemy.position.y + enemy.size.y / 2);
         ball.velocity.x *= -1;
     }
+
+	if (ball.position.y > enemy.position.y && ball.position.y + ball.size.y < enemy.position.x + enemy.size.x
+			&& ball.position.x + ball.size.x > enemy.position.x)
+	{
+		callEnemyAi = false;
+	}
+
+    if (callEnemyAi)
+        enemyAI();
 }
 
 void Game::enemyAI()
 {
     // shoot a raycast
-    Vec2D point = ball.position;
+    static Vec2D point = ball.position;
+    static float offset = 0;
     Vec2D pointVelocity = ball.velocity;
+
+    if (point.x == enemy.position.x)
+    {
+        enemy.goToPos(
+            Vec2D(enemy.position.x, point.y - enemy.size.y / 2 + offset), 5);
+    }
 
     while (true)
     {
@@ -232,8 +250,11 @@ void Game::enemyAI()
 
         if (point.x > enemy.position.x)
         {
-            enemy.goToPos(Vec2D(enemy.position.x, point.y - enemy.size.y / 2),
-                          5);
+            srand(time(NULL));
+            offset = (rand() % 151) - 75;
+            enemy.goToPos(
+                Vec2D(enemy.position.x, point.y - enemy.size.y / 2 + offset),
+                5);
             return;
         }
     }

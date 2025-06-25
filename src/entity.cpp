@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include "vector.hpp"
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <cstdlib>
 
@@ -27,18 +28,25 @@ void Entity::update(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha)
 
 void Entity::goToPos(const Vec2D &desiredPosition, const float &maxSpeed)
 {
-//    if (position.x != desiredPosition.x || position.y != desiredPosition.y)
-//    {
-//        float diffX = position.x - desiredPosition.x;
-//        float diffY = position.y - desiredPosition.y;
-//        if (diffX != 0)
-//            velocity.x = maxSpeed * (diffX / std::abs(diffX));
-//        if (diffY != 0)
-//            velocity.y = maxSpeed * (diffY / std::abs(diffY));
-//    }
-//    else
-//    {
-//        velocity.x = 0;
-//        velocity.y = 0;
-	this->position.y = desiredPosition.y;
+    Vec2D direction =
+        Vec2D(desiredPosition.x - position.x, desiredPosition.y - position.y);
+    float distance = hypot(direction.x, direction.y);
+
+	direction.x /= distance;
+	direction.y /= distance;
+
+    if (distance > maxSpeed)
+    {
+        velocity = Vec2D(direction.x * maxSpeed, direction.y * maxSpeed);
+    }
+    else
+    {
+        velocity = Vec2D(direction.x * distance, direction.y * distance);
+
+        if (distance < 1.0f)
+        {
+            position = desiredPosition;
+            velocity = Vec2D(0, 0);
+        }
+    }
 }
