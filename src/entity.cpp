@@ -26,7 +26,7 @@ void Entity::update(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha)
     SDL_RenderFillRect(Game::gameRenderer, &rect);
 }
 
-void Entity::goToPos(const Vec2D &desiredPosition, const float &maxSpeed)
+void Entity::goToPos(const Vec2D &desiredPosition, const float &maxSpeed, bool &reachedPos)
 {
     Vec2D direction =
         Vec2D(desiredPosition.x - position.x, desiredPosition.y - position.y);
@@ -47,6 +47,7 @@ void Entity::goToPos(const Vec2D &desiredPosition, const float &maxSpeed)
         {
             position = desiredPosition;
             velocity = Vec2D(0, 0);
+			reachedPos = true;
         }
     }
 }

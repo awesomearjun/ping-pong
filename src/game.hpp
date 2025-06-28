@@ -5,6 +5,7 @@
 #include "SDL_pixels.h"
 #include "entity.hpp"
 #include "text.hpp"
+#include "vector.hpp"
 
 class Game
 {
@@ -36,6 +37,9 @@ private:
 
 	SDL_Color playerTextColor;
 	SDL_Color enemyTextColor;
+	
+	bool enemyReachedDesiredPosition;
+	Vec2D enemyDesiredPosition;
 
 	int frameNumber;
 };

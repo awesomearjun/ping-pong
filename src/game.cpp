@@ -79,6 +79,9 @@ int Game::init(const char *p_windowTitle, int p_windowX, int p_windowY,
     enemyScoreText.init("../res/fonts/Peepo.ttf", 40, "00", enemyTextColor,
                         windowWidth / 4 * 3, 20);
 
+    enemyReachedDesiredPosition = true;
+    enemyDesiredPosition = Vec2D(0, 0);
+
     return 0;
 }
 
@@ -116,6 +119,9 @@ void Game::update()
 
         eventManager();
 
+        if (!enemyReachedDesiredPosition)
+            enemy.goToPos(enemyDesiredPosition, 5, enemyReachedDesiredPosition);
+
         SDL_RenderPresent(Game::gameRenderer);
 
         const uint32_t end = SDL_GetTicks();
@@ -133,7 +139,6 @@ void Game::destroy()
 
 void Game::eventManager()
 {
-    bool callEnemyAi = false;
     const uint8_t *currentKeyState = SDL_GetKeyboardState(NULL);
 
     const bool up = currentKeyState[SDL_SCANCODE_UP] |
@@ -170,7 +175,7 @@ void Game::eventManager()
                               (player.velocity.y / abs(player.velocity.y));
         }
 
-        callEnemyAi = true;
+        enemyAI();
     }
 
     if (ball.position.x + ball.size.x > enemy.position.x &&
@@ -189,7 +194,14 @@ void Game::eventManager()
     if (ball.position.x + ball.size.x > windowWidth)
     {
         playerScoreInt++;
-        playerScoreText.update(std::to_string(playerScoreInt));
+
+        std::string buffer;
+        if (std::to_string(playerScoreInt).length() == 1)
+            buffer = "0" + std::to_string(playerScoreInt);
+        else
+            buffer = std::to_string(playerScoreInt);
+
+        playerScoreText.update(buffer);
 
         SDL_Delay(300);
 
@@ -218,28 +230,21 @@ void Game::eventManager()
         ball.velocity.x *= -1;
     }
 
-	if (ball.position.y > enemy.position.y && ball.position.y + ball.size.y < enemy.position.x + enemy.size.x
-			&& ball.position.x + ball.size.x > enemy.position.x)
-	{
-		callEnemyAi = false;
-	}
-
-    if (callEnemyAi)
-        enemyAI();
+    if ((enemy.position.y < 0 && enemyDesiredPosition.y < 0) ||
+        (enemy.position.y + enemy.size.y > windowHeight &&
+         enemyDesiredPosition.y + enemy.size.y > windowHeight))
+    {
+        enemy.velocity = Vec2D(0, 0);
+        enemyReachedDesiredPosition = true;
+    }
 }
 
 void Game::enemyAI()
 {
     // shoot a raycast
-    static Vec2D point = ball.position;
-    static float offset = 0;
+    Vec2D point = ball.position;
+    float offset = 0;
     Vec2D pointVelocity = ball.velocity;
-
-    if (point.x == enemy.position.x)
-    {
-        enemy.goToPos(
-            Vec2D(enemy.position.x, point.y - enemy.size.y / 2 + offset), 5);
-    }
 
     while (true)
     {
@@ -251,10 +256,11 @@ void Game::enemyAI()
         if (point.x > enemy.position.x)
         {
             srand(time(NULL));
-            offset = (rand() % 151) - 75;
-            enemy.goToPos(
-                Vec2D(enemy.position.x, point.y - enemy.size.y / 2 + offset),
-                5);
+            offset = rand() % 181 - 75;
+            enemyDesiredPosition =
+                Vec2D(enemy.position.x, point.y - enemy.size.y / 2 + offset);
+
+            enemyReachedDesiredPosition = false;
             return;
         }
     }
