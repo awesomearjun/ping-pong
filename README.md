@@ -1,7 +1,9 @@
 # ping-pong
 It is my first game that I made by myself using SDL2 and C++
 ## Screenshot
-Coming soon!
+
+<img title="ping pong screenshot" alt="screenshot of ping pong" src="./ping-pong-screenshot.png">
+
 ## Compiling instructions
 This project uses CMake as its build tool. It also uses the FetchContent module, so no locally installed libraries are needed.
 <details>
